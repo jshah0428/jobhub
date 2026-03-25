@@ -3,6 +3,5 @@ name = "jobhub-backend"
 version = "0.1.0"
 requires-python = ">=3.11"
 
-# Tells Vercel where the FastAPI ASGI app lives (see Vercel Python / FastAPI docs).
 [project.scripts]
 app = "api.main:app"
