@@ -50,7 +50,7 @@ function App() {
           err instanceof Error ? err.message : String(err),
       });
     }
-  }, []);
+  }, [backendBase]);
 
   useEffect(() => {
     runCheck();
