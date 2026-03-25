@@ -1,9 +1,11 @@
 # jobhub
 hub for jobs - cs490 null pointers project
 
-## to get started:
+## get started:
 
 open two terminals, one for the frontend and one for the backend
+
+note: all of the instructions below are for mac users
 
 ### 1. start frontend
 from project root:
@@ -23,7 +25,27 @@ from the project root:
 cd backend
 source venv/bin/activate
 pip install -r requirements.txt
-uvicorn main:app --reload
+uvicorn api.main:app --reload
 ```
 
 this will start the api server (usually at `http://localhost:8000`)
+
+## running tests
+
+### frontend
+
+```bash
+cd frontend
+npm install
+npm test
+```
+
+### backend
+
+```bash
+cd backend
+source venv/bin/activate
+pip install -r requirements.txt
+pip install pytest
+pytest
+```
