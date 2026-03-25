@@ -25,7 +25,7 @@ from the project root:
 cd backend
 source venv/bin/activate
 pip install -r requirements.txt
-uvicorn api.main:app --reload
+uvicorn main:app --reload
 ```
 
 this will start the api server (usually at `http://localhost:8000`)
