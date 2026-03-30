@@ -77,3 +77,9 @@
   color: #ff9b9b;
   border: 1px solid rgba(255, 155, 155, 0.3);
 }
+
+.JobCard-badge--unknown {
+  background: rgba(174, 180, 192, 0.12);
+  color: #aeb4c0;
+  border: 1px solid rgba(174, 180, 192, 0.3);
+}

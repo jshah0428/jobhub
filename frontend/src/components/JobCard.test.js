@@ -40,9 +40,14 @@ test('renders rejected status badge', () => {
   expect(screen.getByText('Rejected')).toBeInTheDocument();
 });
 
-test('unknown status renders the raw value as badge', () => {
+test('unknown status renders the raw value as badge text', () => {
   render(<JobCard job={{ ...baseJob, status: 'custom_stage' }} />);
   expect(screen.getByText('custom_stage')).toBeInTheDocument();
+});
+
+test('unknown status uses safe fallback CSS class', () => {
+  render(<JobCard job={{ ...baseJob, status: 'custom_stage' }} />);
+  expect(screen.getByText('custom_stage')).toHaveClass('JobCard-badge--unknown');
 });
 
 test('badge has correct CSS class for status', () => {

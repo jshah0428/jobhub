@@ -7,6 +7,8 @@ const STATUS_LABELS = {
   rejected: 'Rejected',
 };
 
+const KNOWN_STATUSES = new Set(Object.keys(STATUS_LABELS));
+
 function formatDate(dateStr) {
   if (!dateStr) return null;
   // Date-only strings (YYYY-MM-DD) are treated as local midnight to avoid
@@ -26,12 +28,13 @@ export default function JobCard({ job }) {
   const activityDate = applied_date || updated_at;
   const formattedDate = formatDate(activityDate);
   const statusLabel = STATUS_LABELS[status] || status;
+  const badgeModifier = KNOWN_STATUSES.has(status) ? status : 'unknown';
 
   return (
     <article className="JobCard">
       <div className="JobCard-header">
         <h3 className="JobCard-title">{title}</h3>
-        <span className={`JobCard-badge JobCard-badge--${status}`}>
+        <span className={`JobCard-badge JobCard-badge--${badgeModifier}`}>
           {statusLabel}
         </span>
       </div>
