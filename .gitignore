@@ -51,3 +51,6 @@ shared/coverage/
 # misc
 *.sqlite3
 *.db
+
+*.code-workspace
+.ruff_cache/

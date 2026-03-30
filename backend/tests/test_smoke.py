@@ -8,7 +8,7 @@ from unittest.mock import MagicMock, patch
 
 from fastapi.testclient import TestClient
 
-from main import app, JobCreate, JobUpdate
+from main import JobCreate, JobUpdate, app
 
 client = TestClient(app)
 
@@ -147,7 +147,11 @@ def test_create_job_success():
     with patch("main.get_supabase", return_value=mock_sb):
         response = client.post(
             "/jobs",
-            json={"title": "Backend Engineer", "company": "TechCorp", "location": "Remote"},
+            json={
+                "title": "Backend Engineer",
+                "company": "TechCorp",
+                "location": "Remote",
+            },
             headers={"authorization": AUTH_HEADER},
         )
     assert response.status_code == 201

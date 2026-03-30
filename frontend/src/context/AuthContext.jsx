@@ -1,11 +1,4 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { supabase, supabaseConfigured } from '../supabaseClient';
 
 const AuthContext = createContext(null);
@@ -76,12 +69,10 @@ export function AuthProvider({ children }) {
       signOut,
       supabaseConfigured,
     }),
-    [session, loading, signIn, signUp, signOut],
+    [session, loading, signIn, signUp, signOut]
   );
 
-  return (
-    <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

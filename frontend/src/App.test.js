@@ -27,7 +27,7 @@ beforeEach(() => {
     Promise.resolve({
       ok: true,
       json: () => Promise.resolve([]),
-    }),
+    })
   );
 });
 
@@ -72,7 +72,7 @@ test('renders job cards when api returns jobs', async () => {
             updated_at: '2026-03-29T00:00:00+00:00',
           },
         ]),
-    }),
+    })
   );
   render(<App />);
   await waitFor(() => {
@@ -87,7 +87,7 @@ test('shows error state when api request fails', async () => {
     Promise.resolve({
       ok: false,
       status: 500,
-    }),
+    })
   );
   render(<App />);
   await waitFor(() => {

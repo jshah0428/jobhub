@@ -27,18 +27,12 @@ export default function Home() {
       <main className="Dashboard-main">
         <h1 className="Dashboard-heading">My Jobs</h1>
 
-        {loading && (
-          <p className="Dashboard-state">Loading jobs…</p>
-        )}
+        {loading && <p className="Dashboard-state">Loading jobs…</p>}
 
-        {!loading && error && (
-          <p className="Dashboard-state Dashboard-state--error">{error}</p>
-        )}
+        {!loading && error && <p className="Dashboard-state Dashboard-state--error">{error}</p>}
 
         {!loading && !error && jobs.length === 0 && (
-          <p className="Dashboard-state">
-            No jobs yet. Add your first application to get started.
-          </p>
+          <p className="Dashboard-state">No jobs yet. Add your first application to get started.</p>
         )}
 
         {!loading && !error && jobs.length > 0 && (
