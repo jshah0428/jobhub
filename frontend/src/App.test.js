@@ -79,7 +79,7 @@ test('renders job cards when api returns jobs', async () => {
     expect(screen.getByText('Software Engineer')).toBeInTheDocument();
   });
   expect(screen.getByText('TechCorp')).toBeInTheDocument();
-  expect(screen.getByText('Applied')).toBeInTheDocument();
+  expect(screen.getAllByText('Applied').length).toBeGreaterThan(0);
 });
 
 test('shows error state when api request fails', async () => {
