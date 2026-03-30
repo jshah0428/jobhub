@@ -39,21 +39,21 @@ afterEach(() => {
 test('renders job board heading when authenticated', async () => {
   render(<App />);
   await waitFor(() => {
-    expect(screen.getByText(/my jobs/i)).toBeInTheDocument();
+    expect(screen.getByText(/my dashboard/i)).toBeInTheDocument();
   });
 });
 
 test('shows user email in toolbar', async () => {
   render(<App />);
   await waitFor(() => {
-    expect(screen.getByText('test@example.com')).toBeInTheDocument();
+    expect(screen.getByText('test')).toBeInTheDocument();
   });
 });
 
 test('shows empty state when api returns no jobs', async () => {
   render(<App />);
   await waitFor(() => {
-    expect(screen.getByText(/no jobs yet/i)).toBeInTheDocument();
+    expect(screen.getByText(/no applications yet/i)).toBeInTheDocument();
   });
 });
 
@@ -79,7 +79,7 @@ test('renders job cards when api returns jobs', async () => {
     expect(screen.getByText('Software Engineer')).toBeInTheDocument();
   });
   expect(screen.getByText('TechCorp')).toBeInTheDocument();
-  expect(screen.getByText('Applied')).toBeInTheDocument();
+  expect(screen.getAllByText('Applied').length).toBeGreaterThan(0);
 });
 
 test('shows error state when api request fails', async () => {
@@ -95,9 +95,9 @@ test('shows error state when api request fails', async () => {
   });
 });
 
-test('renders log out button in toolbar', async () => {
+test('renders log out button in sidebar', async () => {
   render(<App />);
   await waitFor(() => {
-    expect(screen.getByRole('button', { name: /log out/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /logout/i })).toBeInTheDocument();
   });
 });
