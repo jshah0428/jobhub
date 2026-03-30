@@ -1,5 +1,5 @@
-import sys
 import os
+import sys
 
 # Ensure the backend directory is on the path so `import main` resolves
 # correctly regardless of where pytest is invoked from (local or CI).

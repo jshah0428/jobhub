@@ -44,8 +44,8 @@ export default function Login() {
 
         {!supabaseConfigured && (
           <p className="AuthMessage AuthMessage--error">
-            Missing <code>REACT_APP_SUPABASE_URL</code> or{' '}
-            <code>REACT_APP_SUPABASE_ANON_KEY</code> in <code>.env</code>.
+            Missing <code>REACT_APP_SUPABASE_URL</code> or <code>REACT_APP_SUPABASE_ANON_KEY</code>{' '}
+            in <code>.env</code>.
           </p>
         )}
 

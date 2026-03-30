@@ -1,9 +1,9 @@
 import os
-from typing import Optional
 from datetime import date
+from typing import Optional
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException, Header, Response
+from fastapi import FastAPI, Header, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
@@ -24,7 +24,9 @@ _supabase = None
 
 
 def get_supabase():
-    """Lazy init so GET / cold starts without loading Supabase's heavy dependency tree."""
+    """Lazy init so GET / cold starts
+    without loading Supabase's heavy
+    dependency tree."""
     global _supabase
     if _supabase is None and SUPABASE_URL and SUPABASE_SERVICE_KEY:
         from supabase import create_client
@@ -34,7 +36,8 @@ def get_supabase():
 
 
 def get_user_id(authorization: Optional[str]) -> str:
-    """Extract and verify user ID from Bearer token using Supabase."""
+    """Extract and verify user ID from
+    Bearer token using Supabase."""
     if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Missing or invalid authorization header")
     token = authorization.split(" ", 1)[1]
@@ -53,6 +56,7 @@ def get_user_id(authorization: Optional[str]) -> str:
 
 
 # --- Pydantic models ---
+
 
 class JobCreate(BaseModel):
     title: str
@@ -76,6 +80,7 @@ class JobUpdate(BaseModel):
 
 # --- Routes ---
 
+
 @app.get("/")
 def root():
     return {"message": "FastAPI running on Vercel"}
@@ -85,7 +90,8 @@ def root():
 def list_jobs(authorization: Optional[str] = Header(default=None)):
     user_id = get_user_id(authorization)
     sb = get_supabase()
-    response = sb.table("jobs").select("*").eq("user_id", user_id).order("created_at", desc=True).execute()
+    response = sb.table("jobs").select("*").eq("user_id", user_id).order("created_at", desc=True)
+    response = response.execute()
     return response.data
 
 
@@ -122,13 +128,7 @@ def update_job(job_id: str, job: JobUpdate, authorization: Optional[str] = Heade
         raise HTTPException(status_code=400, detail="No fields to update")
     if "applied_date" in payload and payload["applied_date"] is not None:
         payload["applied_date"] = str(payload["applied_date"])
-    response = (
-        sb.table("jobs")
-        .update(payload)
-        .eq("id", job_id)
-        .eq("user_id", user_id)
-        .execute()
-    )
+    response = sb.table("jobs").update(payload).eq("id", job_id).eq("user_id", user_id).execute()
     if not response.data:
         raise HTTPException(status_code=404, detail="Job not found")
     return response.data[0]
@@ -138,13 +138,7 @@ def update_job(job_id: str, job: JobUpdate, authorization: Optional[str] = Heade
 def delete_job(job_id: str, authorization: Optional[str] = Header(default=None)):
     user_id = get_user_id(authorization)
     sb = get_supabase()
-    response = (
-        sb.table("jobs")
-        .delete()
-        .eq("id", job_id)
-        .eq("user_id", user_id)
-        .execute()
-    )
+    response = sb.table("jobs").delete().eq("id", job_id).eq("user_id", user_id).execute()
     if not response.data:
         raise HTTPException(status_code=404, detail="Job not found")
     return Response(status_code=204)

@@ -43,7 +43,7 @@ export default function Signup() {
     }
 
     setInfo(
-      'Account created. If email confirmation is enabled in Supabase, check your inbox before signing in.',
+      'Account created. If email confirmation is enabled in Supabase, check your inbox before signing in.'
     );
   }
 
@@ -55,8 +55,8 @@ export default function Signup() {
 
         {!supabaseConfigured && (
           <p className="AuthMessage AuthMessage--error">
-            Missing <code>REACT_APP_SUPABASE_URL</code> or{' '}
-            <code>REACT_APP_SUPABASE_ANON_KEY</code> in <code>.env</code>.
+            Missing <code>REACT_APP_SUPABASE_URL</code> or <code>REACT_APP_SUPABASE_ANON_KEY</code>{' '}
+            in <code>.env</code>.
           </p>
         )}
 
