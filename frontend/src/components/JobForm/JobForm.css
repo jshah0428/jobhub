@@ -110,7 +110,9 @@
   font-family: 'Outfit', sans-serif;
   font-size: 14px;
   outline: none;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
   box-sizing: border-box;
 }
 
