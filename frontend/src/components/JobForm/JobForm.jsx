@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import './JobForm.css';
 
 const STATUS_OPTIONS = [
@@ -20,12 +20,15 @@ const EMPTY_FORM = {
   notes: '',
 };
 
+const STATUS_ALIAS = { interviewing: 'interview', offered: 'offer' };
+
 function toFormValues(job) {
+  const rawStatus = job.status ?? 'applied';
   return {
     title: job.title ?? '',
     company: job.company ?? '',
     location: job.location ?? '',
-    status: job.status ?? 'applied',
+    status: STATUS_ALIAS[rawStatus] ?? rawStatus,
     applied_date: job.applied_date?.slice(0, 10) ?? '',
     description: job.description ?? '',
     notes: job.notes ?? '',
@@ -39,6 +42,7 @@ export default function JobForm({ mode, job, accessToken, onClose, onSaved }) {
   const [apiError, setApiError] = useState(null);
   const [saving, setSaving] = useState(false);
   const overlayRef = useRef(null);
+  const modalRef = useRef(null);
   const firstInputRef = useRef(null);
 
   useEffect(() => {
@@ -52,6 +56,29 @@ export default function JobForm({ mode, job, accessToken, onClose, onSaved }) {
     document.addEventListener('keydown', handleKey);
     return () => document.removeEventListener('keydown', handleKey);
   }, [onClose, saving]);
+
+  const handleModalKeyDown = useCallback((e) => {
+    if (e.key !== 'Tab' || !modalRef.current) return;
+    const focusable = Array.from(
+      modalRef.current.querySelectorAll(
+        'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      )
+    );
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey) {
+      if (document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      }
+    } else {
+      if (document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+  }, []);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -142,7 +169,7 @@ export default function JobForm({ mode, job, accessToken, onClose, onSaved }) {
       aria-modal="true"
       aria-labelledby="jf-title"
     >
-      <div className="jf-modal">
+      <div className="jf-modal" ref={modalRef} onKeyDown={handleModalKeyDown}>
         <div className="jf-header">
           <h2 className="jf-title" id="jf-title">
             {isEdit ? 'Edit Application' : 'Add Job Application'}

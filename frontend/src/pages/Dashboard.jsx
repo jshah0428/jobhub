@@ -263,6 +263,7 @@ export default function Dashboard() {
 
       {formState && (
         <JobForm
+          key={formState.mode === 'edit' ? formState.job?.id : 'create'}
           mode={formState.mode}
           job={formState.job}
           accessToken={session?.access_token}

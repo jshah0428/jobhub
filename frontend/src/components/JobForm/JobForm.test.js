@@ -175,6 +175,24 @@ describe('rendering - edit mode', () => {
     render(<JobForm {...baseProps} mode="edit" job={job} />);
     expect(screen.getByLabelText(/applied date/i)).toHaveValue('2026-03-15');
   });
+
+  test('normalizes "interviewing" status alias to "interview"', () => {
+    const job = { ...sampleJob, status: 'interviewing' };
+    render(<JobForm {...baseProps} mode="edit" job={job} />);
+    expect(screen.getByLabelText(/status/i)).toHaveValue('interview');
+  });
+
+  test('normalizes "offered" status alias to "offer"', () => {
+    const job = { ...sampleJob, status: 'offered' };
+    render(<JobForm {...baseProps} mode="edit" job={job} />);
+    expect(screen.getByLabelText(/status/i)).toHaveValue('offer');
+  });
+
+  test('preserves unrecognized status values as-is', () => {
+    const job = { ...sampleJob, status: 'rejected' };
+    render(<JobForm {...baseProps} mode="edit" job={job} />);
+    expect(screen.getByLabelText(/status/i)).toHaveValue('rejected');
+  });
 });
 
 describe('status dropdown options', () => {
@@ -823,5 +841,46 @@ describe('accessibility', () => {
   test('title input has no aria-invalid when no error', () => {
     render(<JobForm {...baseProps} />);
     expect(screen.getByLabelText(/job title/i)).not.toHaveAttribute('aria-invalid');
+  });
+});
+
+// ─── Focus trap ───────────────────────────────────────────────────────────────
+
+describe('focus trap', () => {
+  function getFocusable() {
+    return Array.from(
+      document
+        .querySelector('.jf-modal')
+        .querySelectorAll(
+          'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled])'
+        )
+    );
+  }
+
+  test('Tab on last focusable element wraps to first', () => {
+    render(<JobForm {...baseProps} />);
+    const focusable = getFocusable();
+    const last = focusable[focusable.length - 1];
+    last.focus();
+    fireEvent.keyDown(document.querySelector('.jf-modal'), { key: 'Tab', shiftKey: false });
+    expect(document.activeElement).toBe(focusable[0]);
+  });
+
+  test('Shift+Tab on first focusable element wraps to last', () => {
+    render(<JobForm {...baseProps} />);
+    const focusable = getFocusable();
+    focusable[0].focus();
+    fireEvent.keyDown(document.querySelector('.jf-modal'), { key: 'Tab', shiftKey: true });
+    expect(document.activeElement).toBe(focusable[focusable.length - 1]);
+  });
+
+  test('Tab mid-modal does not wrap', () => {
+    render(<JobForm {...baseProps} />);
+    const focusable = getFocusable();
+    const mid = focusable[1];
+    mid.focus();
+    fireEvent.keyDown(document.querySelector('.jf-modal'), { key: 'Tab', shiftKey: false });
+    // focus stays on mid — no wrapping occurred
+    expect(document.activeElement).toBe(mid);
   });
 });
