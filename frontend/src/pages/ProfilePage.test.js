@@ -91,7 +91,11 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  process.env.REACT_APP_BACKEND_URL = savedBackendUrl;
+  if (savedBackendUrl === undefined) {
+    delete process.env.REACT_APP_BACKEND_URL;
+  } else {
+    process.env.REACT_APP_BACKEND_URL = savedBackendUrl;
+  }
 });
 
 // ─── Page structure ───────────────────────────────────────────────────────────
