@@ -4,8 +4,8 @@ import './JobForm.css';
 const STATUS_OPTIONS = [
   { value: 'interested', label: 'Interested' },
   { value: 'applied', label: 'Applied' },
-  { value: 'interview', label: 'Interview' },
-  { value: 'offer', label: 'Offer' },
+  { value: 'interviewing', label: 'Interviewing' },
+  { value: 'offered', label: 'Offered' },
   { value: 'rejected', label: 'Rejected' },
   { value: 'archived', label: 'Archived' },
 ];
@@ -20,7 +20,8 @@ const EMPTY_FORM = {
   notes: '',
 };
 
-const STATUS_ALIAS = { interviewing: 'interview', offered: 'offer' };
+// Normalize legacy short-form values stored by older records
+const STATUS_ALIAS = { interview: 'interviewing', offer: 'offered' };
 
 function toFormValues(job) {
   const rawStatus = job.status ?? 'applied';
@@ -161,15 +162,15 @@ export default function JobForm({ mode, job, accessToken, onClose, onSaved }) {
   }
 
   return (
-    <div
-      className="jf-overlay"
-      ref={overlayRef}
-      onClick={handleOverlayClick}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="jf-title"
-    >
-      <div className="jf-modal" ref={modalRef} onKeyDown={handleModalKeyDown}>
+    <div className="jf-overlay" ref={overlayRef} onClick={handleOverlayClick} role="presentation">
+      <div
+        className="jf-modal"
+        ref={modalRef}
+        onKeyDown={handleModalKeyDown}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="jf-title"
+      >
         <div className="jf-header">
           <h2 className="jf-title" id="jf-title">
             {isEdit ? 'Edit Application' : 'Add Job Application'}

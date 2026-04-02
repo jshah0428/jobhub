@@ -10,6 +10,8 @@ export function useJobs(accessToken) {
     const backendBase = (process.env.REACT_APP_BACKEND_URL || '').replace(/\/+$/, '') || null;
 
     if (!accessToken || !backendBase) {
+      pendingRef.current?.abort();
+      pendingRef.current = null;
       setJobs([]);
       setError(null);
       setLoading(false);

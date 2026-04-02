@@ -18,7 +18,7 @@ const sampleJob = {
   title: 'Software Engineer',
   company: 'Acme Corp',
   location: 'New York, NY',
-  status: 'interview',
+  status: 'interviewing',
   applied_date: '2026-03-15',
   description: 'Build great products.',
   notes: 'Call on Monday.',
@@ -139,7 +139,7 @@ describe('rendering - edit mode', () => {
 
   test('pre-fills status dropdown', () => {
     render(<JobForm {...baseProps} mode="edit" job={sampleJob} />);
-    expect(screen.getByLabelText(/status/i)).toHaveValue('interview');
+    expect(screen.getByLabelText(/status/i)).toHaveValue('interviewing');
   });
 
   test('pre-fills applied date', () => {
@@ -176,19 +176,19 @@ describe('rendering - edit mode', () => {
     expect(screen.getByLabelText(/applied date/i)).toHaveValue('2026-03-15');
   });
 
-  test('normalizes "interviewing" status alias to "interview"', () => {
-    const job = { ...sampleJob, status: 'interviewing' };
+  test('normalizes legacy "interview" alias to canonical "interviewing"', () => {
+    const job = { ...sampleJob, status: 'interview' };
     render(<JobForm {...baseProps} mode="edit" job={job} />);
-    expect(screen.getByLabelText(/status/i)).toHaveValue('interview');
+    expect(screen.getByLabelText(/status/i)).toHaveValue('interviewing');
   });
 
-  test('normalizes "offered" status alias to "offer"', () => {
-    const job = { ...sampleJob, status: 'offered' };
+  test('normalizes legacy "offer" alias to canonical "offered"', () => {
+    const job = { ...sampleJob, status: 'offer' };
     render(<JobForm {...baseProps} mode="edit" job={job} />);
-    expect(screen.getByLabelText(/status/i)).toHaveValue('offer');
+    expect(screen.getByLabelText(/status/i)).toHaveValue('offered');
   });
 
-  test('preserves unrecognized status values as-is', () => {
+  test('preserves canonical status values as-is', () => {
     const job = { ...sampleJob, status: 'rejected' };
     render(<JobForm {...baseProps} mode="edit" job={job} />);
     expect(screen.getByLabelText(/status/i)).toHaveValue('rejected');
@@ -204,8 +204,8 @@ describe('status dropdown options', () => {
       expect.arrayContaining([
         'interested',
         'applied',
-        'interview',
-        'offer',
+        'interviewing',
+        'offered',
         'rejected',
         'archived',
       ])
@@ -220,8 +220,8 @@ describe('status dropdown options', () => {
       expect.arrayContaining([
         'Interested',
         'Applied',
-        'Interview',
-        'Offer',
+        'Interviewing',
+        'Offered',
         'Rejected',
         'Archived',
       ])
@@ -482,11 +482,11 @@ describe('edit mode - form submission', () => {
 
   test('sends updated status when changed', async () => {
     render(<JobForm {...baseProps} mode="edit" job={sampleJob} />);
-    fireEvent.change(screen.getByLabelText(/status/i), { target: { value: 'offer' } });
+    fireEvent.change(screen.getByLabelText(/status/i), { target: { value: 'offered' } });
     fireEvent.click(screen.getByRole('button', { name: /save changes/i }));
     await waitFor(() => expect(global.fetch).toHaveBeenCalled());
     const body = JSON.parse(global.fetch.mock.calls[0][1].body);
-    expect(body.status).toBe('offer');
+    expect(body.status).toBe('offered');
   });
 
   test('sends null for cleared optional fields', async () => {
@@ -738,7 +738,7 @@ describe('close behavior', () => {
 
   test('calls onClose when clicking the overlay backdrop', () => {
     render(<JobForm {...baseProps} />);
-    fireEvent.click(screen.getByRole('dialog'));
+    fireEvent.click(document.querySelector('.jf-overlay'));
     expect(baseProps.onClose).toHaveBeenCalledTimes(1);
   });
 
@@ -768,7 +768,7 @@ describe('close behavior', () => {
     await userEvent.type(screen.getByLabelText(/company/i), 'Corp');
     fireEvent.click(screen.getByRole('button', { name: /add job/i }));
     await waitFor(() => screen.getByRole('button', { name: /saving/i }));
-    fireEvent.click(screen.getByRole('dialog'));
+    fireEvent.click(document.querySelector('.jf-overlay'));
     expect(baseProps.onClose).not.toHaveBeenCalled();
     settle();
     await waitFor(() => expect(baseProps.onClose).toHaveBeenCalled());
